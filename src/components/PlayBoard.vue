@@ -3,13 +3,41 @@
     <div class="title">{{ title }}</div>
     <div class="grid-container">
       <div class="line" v-for="line in rowsCount" :key="line">
-        <div class="cell" v-for="col in columnsCount" :key="col">
-          {{ line }}.{{ col }}
-        </div>
+        <div
+          class="cell"
+          v-for="col in columnsCount"
+          :key="col"
+          :class="getCellStatus(line, col)"
+        ></div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: "PlayBoard",
+  props: {
+    title: String,
+    columnsCount: Number,
+    rowsCount: Number,
+    boardCells: {
+      type: Object,
+      default: null
+    }
+  },
+  methods: {
+    getCellStatus(row, column) {
+      try {
+        const alpha = "ABCDEFGHIJ";
+        return this.boardCells[alpha[row] + column.toString()].status;
+      } catch (e) {
+        return "";
+      }
+    }
+  }
+};
+</script>
 
 <style lang="scss" scoped>
 .playboard {
@@ -36,15 +64,19 @@
   height: 3vw;
   width: 3vw;
 }
+.ship {
+  background-color: black;
+}
+.ship.hidden {
+  background-color: unset;
+}
+.missed {
+  background-color: aqua;
+}
+.hit {
+  background-color: yellow;
+}
+.sunk {
+  background-color: red;
+}
 </style>
-
-<script>
-export default {
-  name: "PlayBoard",
-  props: {
-    title: String,
-    columnsCount: Number,
-    rowsCount: Number
-  }
-};
-</script>
